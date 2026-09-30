@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Firm Capacity Planner</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <div><p class="eyebrow">OPERATIONS PLANNING</p><h1>Firm Capacity Planner</h1>
+  <p>Model revenue demand, funnel volume, seasonality, and staffing capacity before making headcount decisions.</p></div>
+  <button id="reset">Reset assumptions</button>
+</header>
+<main>
+<section class="kpis">
+  <article><span>Annual target</span><strong id="kTarget">$0</strong></article>
+  <article><span>Clients needed</span><strong id="kClients">0</strong></article>
+  <article><span>Leads needed / week</span><strong id="kLeads">0</strong></article>
+  <article><span>Consults needed / week</span><strong id="kConsults">0</strong></article>
+</section>
+
+<nav class="tabs" aria-label="Planner sections">
+<button class="tab active" data-tab="funnel">Revenue & Funnel</button>
+<button class="tab" data-tab="seasonality">Seasonality</button>
+<button class="tab" data-tab="intake">Intake</button>
+<button class="tab" data-tab="ces">Client Engagement</button>
+<button class="tab" data-tab="marketing">Marketing & Management</button>
+<button class="tab" data-tab="summary">Summary</button>
+</nav>
+
+<section id="funnel" class="panel active">
+<h2>Revenue & Funnel</h2><p class="help">Start with the firm's goals and confirmed conversion rates.</p>
+<div class="grid">
+<label>Annual sales target ($)<input id="annualTarget" type="number" value="3300000" min="0"></label>
+<label>Average case value ($)<input id="caseValue" type="number" value="3500" min="1"></label>
+<label>Working weeks / year<input id="weeks" type="number" value="52" min="1" max="52"></label>
+<label>Current leads / week<input id="currentLeads" type="number" value="150" min="0"></label>
+<label>Intake qualification rate (%)<input id="intakeQual" type="number" value="30" min="0" max="100"></label>
+<label>Qualified → consult rate (%)<input id="consultRate" type="number" value="70" min="0" max="100"></label>
+<label>CES/legal qualification rate (%)<input id="cesQual" type="number" value="70" min="0" max="100"></label>
+<label>Qualified consult → client (%)<input id="closeRate" type="number" value="50" min="0" max="100"></label>
+</div>
+<div id="funnelFlow" class="flow"></div>
+</section>
+
+<section id="seasonality" class="panel">
+<h2>Seasonality</h2><p class="help">Enter each month's share of annual sales. The weights should total 100%. This avoids simply dividing the annual goal by 12.</p>
+<div id="seasonGrid" class="season-grid"></div>
+<div class="total-line"><span>Total weight</span><strong id="weightTotal">100%</strong></div>
+<div class="table-wrap"><table><thead><tr><th>Month</th><th>Weight</th><th>Sales target</th><th>Clients needed</th></tr></thead><tbody id="seasonTable"></tbody></table></div>
+</section>
+
+<section id="intake" class="panel">
+<h2>Intake Capacity</h2><p class="help">Replace the placeholders below as you confirm actual time studies. Coverage and workload are calculated separately.</p>
+<div class="grid">
+<label>Average qualification minutes<input id="qualMinutes" type="number" value="30" min="0"></label>
+<label>Unanswered leads / week<input id="unanswered" type="number" value="75" min="0"></label>
+<label>Manual attempts / unanswered lead<input id="attempts" type="number" value="8" min="0"></label>
+<label>Minutes / manual attempt<input id="attemptMinutes" type="number" value="3" min="0"></label>
+<label>Document work hours / week<input id="docHours" type="number" value="8" min="0" step=".5"></label>
+<label>CRM/inbound monitoring hours / week<input id="monitorHours" type="number" value="8" min="0" step=".5"></label>
+<label>Other admin hours / week<input id="intakeAdmin" type="number" value="4" min="0" step=".5"></label>
+<label>Productive hours / employee / week<input id="productiveHours" type="number" value="32" min="1" max="40"></label>
+<label>Minimum people for continuous coverage<input id="coverageFloor" type="number" value="2" min="1"></label>
+<label>Follow-up automation (%)<input id="automationPct" type="number" value="0" min="0" max="100"></label>
+</div>
+<div id="intakeCards" class="result-grid"></div>
+</section>
+
+<section id="ces" class="panel">
+<h2>Client Engagement Capacity</h2>
+<div class="grid">
+<label>Consult capacity / CES / week<input id="cesCapacity" type="number" value="24" min="1"></label>
+<label>Consult length (minutes)<input id="consultMinutes" type="number" value="45" min="1"></label>
+<label>Follow-up hours / CES / week<input id="cesFollow" type="number" value="8" min="0" step=".5"></label>
+<label>Service call + admin hours / CES / week<input id="cesAdmin" type="number" value="4" min="0" step=".5"></label>
+</div>
+<div id="cesCards" class="result-grid"></div>
+</section>
+
+<section id="marketing" class="panel">
+<h2>Marketing & Management Capacity</h2>
+<div class="grid">
+<label>Marketing workload hours / week<input id="marketingHours" type="number" value="40" min="0"></label>
+<label>Productive hours / marketing employee<input id="marketingProductive" type="number" value="32" min="1" max="40"></label>
+<label>Direct reports / manager<input id="managerSpan" type="number" value="7" min="1"></label>
+<label>Manager strategic/admin hours / week<input id="managerAdmin" type="number" value="16" min="0" max="40"></label>
+</div>
+<div id="marketingCards" class="result-grid"></div>
+</section>
+
+<section id="summary" class="panel">
+<h2>Capacity Summary</h2><p class="help">Use this as the starting point for comparing required positions against current payroll.</p>
+<div class="table-wrap"><table><thead><tr><th>Function</th><th>Current-volume need</th><th>Annual-target need</th><th>Capacity driver</th></tr></thead><tbody id="summaryBody"></tbody></table></div>
+<div class="note"><strong>Important:</strong> This is a planning model, not an automatic hiring recommendation. Validate time assumptions and production capacity before changing headcount.</div>
+</section>
+</main>
+<footer>Firm Capacity Planner · Inputs save automatically in this browser.</footer>
+<script src="app.js"></script>
+</body></html>
